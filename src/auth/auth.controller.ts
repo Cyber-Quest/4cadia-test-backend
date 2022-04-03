@@ -87,11 +87,12 @@ export class AuthController {
   async signup(@Body() signUpDto: CreateUserDto) {
     let { password } = signUpDto;
     const newPassword = await this.authService.createHash(password);
+    
     const user = await this.authService.create({
       ...signUpDto,
       password: newPassword,
     });
-
+ 
     delete user.password;
     delete user.id;
 

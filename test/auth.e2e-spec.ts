@@ -14,9 +14,16 @@ describe('AuthController (e2e)', () => {
     findAll: () => [userEntity],
     findOne: () => userEntity,
     compareHash: () => true,
+    createHash: () => '32423434234234',
+    create: () =>
+      new User({
+        email: 'any_email',
+        password: 'any_password',
+        username: 'any_username',
+      }),
   };
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AuthModule,
@@ -30,31 +37,37 @@ describe('AuthController (e2e)', () => {
           autoLoadEntities: true,
           synchronize: true,
         }),
-      ], 
+      ],
     })
       .overrideProvider(AuthService)
       .useValue(usersService)
       .compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication(); 
     await app.init();
   });
 
-  it('/auth/signup (POST)', async () => { 
-    return await request(app.getHttpServer())
-      .post('/auth/signup')
-      .expect(201) 
-      .expect((response) => {
-        expect(response.body).toHaveProperty("token")
-      });
+  describe('auth', () => {
+    it('/auth/signup (POST)', () => {
+      return request(app.getHttpServer())
+        .post('/auth/signup')
+        .expect(201)
+        .expect((response) => {
+          expect(response.body).toHaveProperty('email');
+        });
+    });
+
+    it('/auth/signin (POST)', () => {
+      return request(app.getHttpServer())
+        .post('/auth/signin')
+        .expect(200)
+        .expect((response) => {
+          expect(response.body).toHaveProperty('token');
+        });
+    });
   });
 
-  it('/auth/signin (POST)', async () => { 
-    return await request(app.getHttpServer())
-      .post('/auth/signin')
-      .expect(200) 
-      .expect((response) => {
-        expect(response.body).toHaveProperty("token")
-      });
+  afterAll(async () => {
+    await app.close();
   });
 });
