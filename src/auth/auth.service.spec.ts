@@ -4,7 +4,7 @@ import { BcryptAdapter } from '../utils/src/adapters';
 import { Repository } from 'typeorm';
 import { AuthService } from './auth.service';
 import { User } from './entities/user.entity';
-import { ConflictException, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 
 const userEntity = new User({ email: 'any_email', password: 'any_password' });
 const password = '$2b$10$Th6JuLVLmI11G0eKasPMweQBjGt0waOwB8BTGmbcED/72VJHz/Xvm';
