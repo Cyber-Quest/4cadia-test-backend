@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Account } from 'src/account/entities/account.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -24,7 +26,7 @@ export class User {
   })
   @Column({ unique: true })
   email: string;
-
+  
   @ApiProperty({
     default: 'any_password',
   })
@@ -40,7 +42,6 @@ export class User {
   @ApiProperty({
     default: new Date(),
   })
-  @CreateDateColumn()
   created_at?: Date;
 
   @ApiProperty({
@@ -48,6 +49,9 @@ export class User {
   })
   @UpdateDateColumn()
   updated_at?: Date;
+  
+  @OneToMany(() => Account, (account) => account.user)
+  accounts: Account[];
 
   constructor(user?: Partial<User>) {
     this.id = user?.id;

@@ -39,18 +39,6 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findOne', () => {
-    it('should return a user entity successfully', async () => {
-      const result = await service.findOne('any_email');
-      expect(result).toEqual(userEntity);
-    });
-
-    it('should throw if an exception', async () => {
-      jest.spyOn(sutRepository, 'findOne').mockRejectedValueOnce(new Error());
-      expect(service.findOne('any_email')).rejects.toThrowError();
-    });
-  });
-
   describe('create', () => {
     it('should return a user entity successfully', async () => {
       const body: User = {
@@ -85,6 +73,18 @@ describe('AuthService', () => {
     });
   });
 
+  describe('findOne', () => {
+    it('should return a user entity successfully', async () => {
+      const result = await service.findOne('any_email');
+      expect(result).toEqual(userEntity);
+    });
+
+    it('should throw if an exception', async () => {
+      jest.spyOn(sutRepository, 'findOne').mockRejectedValueOnce(new Error());
+      expect(service.findOne('any_email')).rejects.toThrowError();
+    });
+  });
+ 
   describe('createHash', () => {
     it('should return a hash if successfully', async () => { 
       const result = await service.createHash("any_password"); 

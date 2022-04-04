@@ -17,20 +17,6 @@ export class AuthService {
     private readonly bcryptAdapter: BcryptAdapter,
   ) {}
 
-  async findOne(value: any) {
-    const auth = await this.authRepository.findOne({
-      where: {
-        ...value,
-      },
-    });
-
-    if (!auth) {
-      throw new NotFoundException(`User not found`);
-    }
-
-    return auth;
-  }
-
   async create(createUserDto: CreateUserDto) {
     const { email } = createUserDto; 
     const user = await this.authRepository.findOne({
@@ -45,6 +31,20 @@ export class AuthService {
 
     const auth = await this.authRepository.create(createUserDto);
     return await this.authRepository.save(auth);
+  }
+
+  async findOne(value: any) {
+    const auth = await this.authRepository.findOne({
+      where: {
+        ...value,
+      },
+    });
+
+    if (!auth) {
+      throw new NotFoundException(`User not found`);
+    }
+
+    return auth;
   }
 
   async createHash(password: string) {  
