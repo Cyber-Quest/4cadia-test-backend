@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Account } from 'src/account/entities/account.entity';
+import { Transaction } from 'src/transaction/entities/transaction.entity';
 import {
   Column,
   CreateDateColumn,
@@ -42,6 +43,7 @@ export class User {
   @ApiProperty({
     default: new Date(),
   })
+  @CreateDateColumn()
   created_at?: Date;
 
   @ApiProperty({
@@ -52,6 +54,9 @@ export class User {
   
   @OneToMany(() => Account, (account) => account.user)
   accounts: Account[];
+  
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 
   constructor(user?: Partial<User>) {
     this.id = user?.id;

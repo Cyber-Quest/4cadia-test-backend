@@ -1,7 +1,6 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { User } from 'src/auth/entities/user.entity';
-import { Account } from '../entities/account.entity';
+import { User } from 'src/auth/entities/user.entity'; 
 
 export class CreateAccountDto {
   @ApiHideProperty()

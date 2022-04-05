@@ -5,7 +5,7 @@ import { Account } from './entities/account.entity';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
 import { AuthService } from 'src/auth/auth.service';
 import { BcryptAdapter } from 'src/utils/src';
-import { User } from 'src/auth/entities/user.entity';
+import { User } from 'src/auth/entities/user.entity'; 
 
 @Module({
   imports: [TypeOrmModule.forFeature([Account, User])],

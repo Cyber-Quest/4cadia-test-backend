@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/auth/entities/user.entity';
+import { Transaction } from 'src/transaction/entities/transaction.entity';
 import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -38,6 +40,9 @@ export class Account {
 
   @ManyToOne(() => User, (user) => user.accounts)
   user: User;
+ 
+  @OneToMany(() => Transaction, (transaction) => transaction.account)
+  transactions: Transaction[];
 
   constructor(user?: Partial<Account>) {
     this.id = user?.id;

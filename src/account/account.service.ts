@@ -4,6 +4,7 @@ import { User } from 'src/auth/entities/user.entity';
 import { FilterDto } from 'src/utils/src';
 import { Repository } from 'typeorm';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { UpdateAccountDto } from './dto/update-account.dto';
 import { Account } from './entities/account.entity';
 
 @Injectable()
@@ -40,15 +41,26 @@ export class AccountService {
     });
   }
 
-  findOne(name: string) {
-    const account = this.accountRepository.findOne({
+  async findOne(name: string, user: User) {  
+    const account = await this.accountRepository.findOne({
       where: {
         name: name,
+        user: user,
       },
     });
 
     if (!account) throw new NotFoundException('Account not found');
 
     return account;
+  }
+
+  async update(id: string, updateAccountDto: UpdateAccountDto){    
+    const account = await this.accountRepository.preload({
+      id: id,
+      ...updateAccountDto,
+    });
+    if (!account) throw new NotFoundException(`account ID ${id} not found!`);
+
+    return this.accountRepository.save(account);
   }
 }

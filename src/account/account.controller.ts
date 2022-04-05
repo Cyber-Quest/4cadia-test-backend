@@ -10,12 +10,21 @@ import {
   Query,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags, IntersectionType } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  IntersectionType,
+} from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 import { FilterDto } from 'src/utils/src';
 import { JwtAuthGuard } from 'src/utils/src/guards';
 import { AccountService } from './account.service';
-import { AdditionalAccountDto, CreateAccountDto } from './dto/create-account.dto';
+import {
+  AdditionalAccountDto,
+  CreateAccountDto,
+} from './dto/create-account.dto';
 import { Account } from './entities/account.entity';
 
 @ApiTags('account')
@@ -26,7 +35,7 @@ export class AccountController {
     private readonly authService: AuthService,
   ) {}
 
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     type: IntersectionType(Account, AdditionalAccountDto),
   })
   @ApiNotFoundResponse({
@@ -58,7 +67,7 @@ export class AccountController {
 
   @ApiOkResponse({
     type: [IntersectionType(Account, AdditionalAccountDto)],
-  })  
+  })
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Get('')
@@ -89,7 +98,15 @@ export class AccountController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(id);
+  findOne(@Req() req: any, @Param('id') id: string) {
+    const { user } = req;
+    return this.accountService.findOne(id, user);
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  update(@Param('id') id: string, @Body() updateAccountDto: CreateAccountDto) {
+    return this.accountService.update(id, updateAccountDto);
   }
 }
