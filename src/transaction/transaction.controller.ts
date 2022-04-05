@@ -8,18 +8,29 @@ import {
   Query,
   HttpCode,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { FilterDto } from 'src/utils/src';
-import { JwtAuthGuard } from 'src/utils/src/guards'; 
+import { JwtAuthGuard } from 'src/utils/src/guards';
+import {
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Account } from 'src/account/entities/account.entity';
+import { Transaction } from './entities/transaction.entity';
 
+@ApiTags('transaction')
 @Controller('transaction')
 export class TransactionController {
-  constructor(
-    private readonly transactionService: TransactionService, 
-  ) {}
+  constructor(private readonly transactionService: TransactionService) {}
 
+  @ApiOkResponse({
+    type: [Transaction],
+  })
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Get('extract/:name')
@@ -32,6 +43,9 @@ export class TransactionController {
     return this.transactionService.findAll(user, filter, name);
   }
 
+  @ApiCreatedResponse({
+    type: Account,
+  })
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('deposit/:name')
@@ -44,6 +58,25 @@ export class TransactionController {
     return this.transactionService.deposit(name, createTransactionDto, user);
   }
 
+  @ApiCreatedResponse({
+    type: Account,
+  })
+  @ApiNotFoundResponse({
+    description: 'Insufficient funds',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: {
+          type: 'number',
+          example: HttpStatus.CONFLICT,
+        },
+        message: {
+          type: 'string',
+          example: 'Insufficient funds',
+        },
+      },
+    },
+  })
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('draw/:name')

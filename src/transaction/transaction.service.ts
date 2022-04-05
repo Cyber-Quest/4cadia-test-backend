@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountService } from 'src/account/account.service';
