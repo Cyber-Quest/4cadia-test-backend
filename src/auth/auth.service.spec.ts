@@ -47,6 +47,8 @@ describe('AuthService', () => {
         password: 'any_password',
         username: 'any',
         active: true,
+        accounts: [],
+        transactions: []
       };
 
       jest.spyOn(sutRepository, 'findOne').mockResolvedValue(null);
@@ -62,6 +64,8 @@ describe('AuthService', () => {
         password: 'any_password',
         username: 'any',
         active: true,
+        accounts: [],
+        transactions: []
       };
 
       jest.spyOn(sutRepository, 'findOne').mockResolvedValue(body);

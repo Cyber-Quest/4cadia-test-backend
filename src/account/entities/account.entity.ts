@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/auth/entities/user.entity';
-import { Transaction } from 'src/transaction/entities/transaction.entity';
+import { User } from '../../auth/entities/user.entity';
+import { Transaction } from '../../transaction/entities/transaction.entity';
 import {
   Column,
   Entity,
