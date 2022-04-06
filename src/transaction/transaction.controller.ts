@@ -40,7 +40,7 @@ export class TransactionController {
     @Query() filter: FilterDto,
   ) {
     const { user } = req;
-    return this.transactionService.findAll(user, filter, name);
+    return this.transactionService.findAll(user, name, filter);
   }
 
   @ApiCreatedResponse({

@@ -1,9 +1,7 @@
-import {
-  ConflictException,
-  Injectable,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountService } from 'src/account/account.service';
+import { Account } from 'src/account/entities/account.entity';
 import { User } from 'src/auth/entities/user.entity';
 import { FilterDto } from 'src/utils/src';
 import { Repository } from 'typeorm';
@@ -25,11 +23,12 @@ export class TransactionService {
     return await this.transactionService.save(transaction);
   }
 
-  findAll(user: User, filter: FilterDto, name: string) {
+  async findAll(user: User, name: string, filter: FilterDto) {
     const relations = ['account'];
     const { skip, take } = filter;
+    const accountFound = await this.accountService.findOne(name, user)
     return this.transactionService.find({
-      where: { user: user },
+      where: { user: user, account: accountFound },
       skip,
       take,
       relations: relations,
@@ -46,7 +45,7 @@ export class TransactionService {
     account.balance = account.balance + Math.abs(amount);
     createTransactionDto.account = account;
     createTransactionDto.user = user;
-    createTransactionDto.type = "deposit"
+    createTransactionDto.type = 'deposit';
 
     this.transactionService.create(createTransactionDto);
     await this.transactionService.save(createTransactionDto);
@@ -62,8 +61,8 @@ export class TransactionService {
     const account = await this.accountService.findOne(name, user);
     account.balance = account.balance - Math.abs(amount);
     createTransactionDto.account = account;
-    createTransactionDto.user = user; 
-    createTransactionDto.type = "draw"
+    createTransactionDto.user = user;
+    createTransactionDto.type = 'draw';
 
     if (account.balance - Math.abs(amount) < 0)
       throw new ConflictException('Insufficient funds');
