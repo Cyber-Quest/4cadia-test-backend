@@ -26,7 +26,7 @@ export class TransactionService {
   }
 
   findAll(user: User, filter: FilterDto, name: string) {
-    const relations = ['user', 'account'];
+    const relations = ['account'];
     const { skip, take } = filter;
     return this.transactionService.find({
       where: { user: user },
